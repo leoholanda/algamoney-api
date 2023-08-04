@@ -38,10 +38,7 @@ public class CategoriaController {
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
         Categoria categoria = service.buscarPeloCodigo(codigo);
-//        if(categoria != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(categoria);
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
     }
 
 }
