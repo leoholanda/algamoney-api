@@ -38,5 +38,8 @@ public class PessoaService {
         return repository.findById(codigo).orElse(null);
     }
 
+    public void remover(Long codigo) {
+        repository.deleteById(codigo);
+    }
 
 }

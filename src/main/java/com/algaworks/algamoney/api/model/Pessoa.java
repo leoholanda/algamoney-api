@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "codigo")
 @Entity
 @Table(name = "pessoa")
 @Getter

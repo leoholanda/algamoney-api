@@ -8,11 +8,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Set;
 
 @RestController
@@ -41,5 +39,11 @@ public class PessoaController {
     public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
         Pessoa pessoa = service.buscarPeloCodigo(codigo);
         return ResponseEntity.status(HttpStatus.OK).body(pessoa);
+    }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo) {
+        service.remover(codigo);
     }
 }
