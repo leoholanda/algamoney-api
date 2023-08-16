@@ -3,8 +3,10 @@ package com.algaworks.algamoney.api.controller;
 import com.algaworks.algamoney.api.event.RecursoCriadoEvent;
 import com.algaworks.algamoney.api.model.Pessoa;
 import com.algaworks.algamoney.api.service.PessoaService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,7 @@ public class PessoaController {
     @GetMapping("/{codigo}")
     public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
         Pessoa pessoa = service.buscarPeloCodigo(codigo);
-        return ResponseEntity.status(HttpStatus.OK).body(pessoa);
+        return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")
@@ -46,4 +48,18 @@ public class PessoaController {
     public void remover(@PathVariable Long codigo) {
         service.remover(codigo);
     }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo,
+                                            @RequestBody @Valid Pessoa pessoa) {
+        Pessoa pessoaSalva = service.atualizar(codigo, pessoa);
+        return ResponseEntity.ok(pessoaSalva);
+    }
+
+    @PutMapping("/{codigo}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+        service.atualizarPropriedadeAtivo(codigo, ativo);
+    }
+
 }

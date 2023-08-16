@@ -1,5 +1,6 @@
 package com.algaworks.algamoney.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,9 +25,15 @@ public class Pessoa implements Serializable {
 
     private String nome;
 
-    private Boolean ativo;
+    private boolean ativo;
 
     @Embedded
     private Endereco endereco;
+
+    @Transient
+    @JsonIgnore
+    public boolean isInativo() {
+        return !this.ativo;
+    }
 
 }
