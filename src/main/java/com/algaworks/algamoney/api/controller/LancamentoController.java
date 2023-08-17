@@ -5,12 +5,15 @@ import com.algaworks.algamoney.api.exception.AlgamoneyExceptionHandler;
 import com.algaworks.algamoney.api.exception.PessoaInexistenteOuInativaException;
 import com.algaworks.algamoney.api.model.Lancamento;
 import com.algaworks.algamoney.api.model.Pessoa;
+import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
 import com.algaworks.algamoney.api.service.LancamentoService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +38,8 @@ public class LancamentoController {
     private MessageSource messageSource;
 
     @GetMapping
-    public List<Lancamento> listarTodos() {
-        return service.listarTodos();
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return service.pesquisar(lancamentoFilter, pageable);
     }
 
     @GetMapping("/{codigo}")
