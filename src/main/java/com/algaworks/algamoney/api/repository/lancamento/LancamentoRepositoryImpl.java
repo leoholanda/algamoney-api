@@ -5,6 +5,7 @@ import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -20,24 +21,43 @@ import java.util.List;
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 
     @PersistenceContext
-    private EntityManager manager;
+    private EntityManager entityManager;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Lancamento> filtrarWithHql(LancamentoFilter filter) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("SELECT l FROM Lancamento l ");
+        hql.append("WHERE (:DESCRICAO IS NULL OR descricao LIKE :DESCRICAO) ");
+        hql.append("AND (:DATAVENCIMENTODE IS NULL AND :DATAVENCIMENTOATE IS NULL ");
+        hql.append(     "OR dataVencimento BETWEEN :DATAVENCIMENTODE AND :DATAVENCIMENTOATE) ");
+
+        TypedQuery<Lancamento> query = entityManager.createQuery(hql.toString(), Lancamento.class);
+        query.setParameter("DESCRICAO", "%" + filter.getDescricao() + "%");
+        query.setParameter("DATAVENCIMENTODE", filter.getDataVencimentoDe());
+        query.setParameter("DATAVENCIMENTOATE", filter.getDataVencimentoAte());
+
+        try {
+            return query.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     @Override
     public Page<Lancamento> filtrar(LancamentoFilter filter, Pageable pageable) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Lancamento> criteria = builder.createQuery(Lancamento.class);
         Root<Lancamento> root = criteria.from(Lancamento.class);
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);
         criteria.where(predicates);
 
-        TypedQuery<Lancamento> query = manager.createQuery(criteria);
+        TypedQuery<Lancamento> query = entityManager.createQuery(criteria);
         adicionarRestricoesDePaginacao(query, pageable);
 
         return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
-
-
 
     private Predicate[] criarRestricoes(LancamentoFilter filter,
                                         CriteriaBuilder builder,
@@ -72,7 +92,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
     }
 
     private Long total(LancamentoFilter filter) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
         Root<Lancamento> root = criteria.from(Lancamento.class);
 
@@ -80,6 +100,6 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         criteria.where(predicates);
 
         criteria.select(builder.count(root));
-        return manager.createQuery(criteria).getSingleResult();
+        return entityManager.createQuery(criteria).getSingleResult();
     }
 }
