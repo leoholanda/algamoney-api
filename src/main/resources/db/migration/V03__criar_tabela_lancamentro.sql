@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS lancamento (
     primary key(codigo)
     );
 
-INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) VALUES ('Conta de Energia', '2023-07-01', '2023-07-20', 800.00, null, 'DESPESA', 7, 1);
+INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) VALUES ('Conta de Energia', '2023-07-01', '2023-07-20', 800.00, null, 'DESPESA', 5, 1);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) VALUES ('Ida ao Shopping', '2023-07-20', '2023-07-15', 200.00, null, 'DESPESA', 3, 2);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) VALUES ('Salário Parcial', '2023-07-10', '2023-07-10', 8000.00, null, 'RECEITA', 5, 1);

@@ -11,3 +11,6 @@ CREATE TABLE IF NOT EXISTS pessoa (
     estado VARCHAR(2),
     primary key(codigo)
 );
+
+INSERT INTO pessoa(codigo, nome, ativo, logradouro, numero, bairro, cep, cidade, estado) VALUES(1, 'James Rodrigues', true, 'Av Brasil', 100, 'Tubalina', '77.400-12', 'Porto Alegre', 'RS');
+INSERT INTO pessoa(codigo, nome, ativo, logradouro, numero, bairro, cep, cidade, estado) VALUES(2, 'Joana Dark', true, 'Rua Rocha', 321, 'Centro', '77.430-00', 'Porto Alegre', 'RS');

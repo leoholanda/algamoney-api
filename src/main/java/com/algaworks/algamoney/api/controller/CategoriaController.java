@@ -37,8 +37,11 @@ public class CategoriaController {
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-        Categoria categoria = service.buscarPeloCodigo(codigo);
-            return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
+        return service.buscarPeloCodigo(codigo)
+                .map(categoria -> ResponseEntity.ok().body(categoria))
+                .orElse(ResponseEntity.notFound().build());
+//        Categoria categoria = service.buscarPeloCodigo(codigo);
+//            return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
     }
 
 }
